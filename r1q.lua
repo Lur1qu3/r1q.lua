@@ -597,8 +597,7 @@ addIcon("Buff", {item=12617, text="Buff"},buffz)
 
 
 
-ceta = macro(50, "Dash De Bahiano", "*", function(m)
-    --Made By VivoDibra#1182 
+ceta = macro(50, "Dash De Bahiano", "*", function(m) 
     local tile = getTileUnderCursor()
     if not tile then return end
     if tile:getTopThing() == g_game.getLocalPlayer() then
@@ -616,6 +615,7 @@ macro(250, "Follow", "*", function()
            end
            end)
 
+UI.Separator()
 
 local loadPanelName = "Restart"
 local cores = {"pink", "white", "green", "red", "blue"}
@@ -1629,7 +1629,6 @@ end,rightPanel)
 
 
 
-------------------
 
 
 
@@ -1708,13 +1707,13 @@ if type(storage.heal2) ~= "table" then
   storage.heal2 = {on=false, title="HP%", text="regeneration", min=0, max=99}
 end
 
--- create 2 healing widgets
+
 for _, healingInfo in ipairs({storage.heal, storage.heal2}) do
   local healingmacro = macro(200, function()
     local hp = player:getHealthPercent()
     if healingInfo.max >= hp and hp >= healingInfo.min then
       if TargetBot then 
-        TargetBot.saySpell(healingInfo.text) -- sync spell with targetbot if available
+        TargetBot.saySpell(healingInfo.text) 
       else
         say(healingInfo.text)
       end
@@ -1811,7 +1810,7 @@ local lastManaShield = 0
 mysticfull = macro(20, "Mystic Full", function() 
   if hasManaShield() or lastManaShield + 90000 > now then return end
   if TargetBot then 
-    TargetBot.saySpell(storage.manaShield) -- sync spell with targetbot if available
+    TargetBot.saySpell(storage.manaShield) 
   else
     say(storage.manaShield)
   end
