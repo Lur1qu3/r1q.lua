@@ -4,7 +4,7 @@ local version = " CUSTOM"
 local nick = "RIQUE".. version
 local Nome = UI.Label(nick)
 
-modules.game_textmessage.displayGameMessage("["..nick.."] Bem A Custom RIQUE!")
+modules.game_textmessage.displayGameMessage("["..nick.."] Bem Vindo A Custom RIQUE!")
 
 local cores = {"green", "red", "black", "green", "orange"}
 local cores2 = 0
