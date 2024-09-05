@@ -34,7 +34,7 @@ Turn = {}
 
 Turn.maxDistance = {x = 7, y = 7}
 Turn.minDistance = 1
-Turn.macro = macro(1, 'ENCARADA', function()
+Turn.macro = macro(100, 'ENCARADA', function()
     local target = g_game.getAttackingCreature()
     if target then
         local targetPos = target:getPosition()
@@ -534,7 +534,6 @@ riquescripts2:setColor("orange")
 
 
 local table_sem_nome = {
-    --example: {'mystic defense', {'anti mystic'}, quando o target falar mystic defense vc vai falar anti mystic.
     {storage.saytarget, storage.reflect},
 };
 
@@ -983,7 +982,6 @@ onTalk(function(name, level, mode, text, channelId, pos)
 end)
 
 
-UI.Separator()
 
 UI.Separator()------------INICIO PAINEL TRAVEL
 
