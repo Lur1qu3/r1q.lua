@@ -617,6 +617,29 @@ macro(250, "Follow", "*", function()
            end
            end)
 
+autoptinvite = macro(100, "Auto Party Invite", function()
+for i,v in ipairs (getSpectators(posz())) do
+    if v ~= player and v:isPlayer() and v:getShield() == 0 and v:getEmblem() == 1 then
+        g_game.partyInvite(v:getId())
+    end
+end
+end)
+addIcon("autoptinvite", {item=16119, text="PT Recr",}, function(icon, isOn)
+  autoptinvite.setOn(isOn) 
+end)
+
+--auto accept pt from guild
+autoptjoin = macro(100, "Auto Party Join", function()
+for i,v in ipairs (getSpectators(posz())) do
+    if v ~= player and v:isPlayer() and v:getShield() == 1 and v:getEmblem() == 1 then
+        g_game.partyJoin(v:getId())
+    end
+end
+end)
+addIcon("autoptjoin", {item=16119, text="PT Join",}, function(icon, isOn)
+  autoptjoin.setOn(isOn) 
+end)
+
 UI.Separator()
 
 local loadPanelName = "Restart"
