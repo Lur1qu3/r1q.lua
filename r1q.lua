@@ -132,13 +132,13 @@ local maxDistance = 7;
 Stack.icon = addIcon("Stack",  {item=802, text="Stack"}, macro(1, "Stack", function() 
     local furthestMonster = nil;
     local pattern = nil;
-    if (modules.corelib.g_keyboard.areKeysPressed("Plus+W")) then
+    if (modules.corelib.g_keyboard.areKeysPressed("b+W")) then
         pattern = Stack.northPattern;
-    elseif (modules.corelib.g_keyboard.areKeysPressed("Plus+S")) then
+    elseif (modules.corelib.g_keyboard.areKeysPressed("b+S")) then
         pattern = Stack.southPattern;
-    elseif (modules.corelib.g_keyboard.areKeysPressed("Plus+A")) then
+    elseif (modules.corelib.g_keyboard.areKeysPressed("b+A")) then
         pattern = Stack.westPattern;
-    elseif (modules.corelib.g_keyboard.areKeysPressed("Plus+D")) then
+    elseif (modules.corelib.g_keyboard.areKeysPressed("b+D")) then
         pattern = Stack.eastPattern;
     end
  
