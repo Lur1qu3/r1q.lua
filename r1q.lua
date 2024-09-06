@@ -666,13 +666,13 @@ end
 
 
 
-  onTextMessage(function(mode, text)
-        if not text:lower():find('BOL') then return; end
-       say("VOCÊ ESTÁ SEM DINHEIRO PRA BOL FDP")
+onTextMessage(function(mode, text)
+        if not text:lower():find('2 golds') then return; end
+       say("VOCÊ ESTÁ SEM DINHEIRO PARA BOL FDP")
     end)
 
 
-  onTextMessage(function(mode, text)
-        if not text:lower():find('5 GOLDS') then return; end
-       say("VOCÊ ESTÁ SEM DINHEIRO PRA BLESS FDP, LISO")
+onTextMessage(function(mode, text)
+        if not text:lower():find('de 5') then return; end
+       say("VOCê ESTÁ SEM DINHEIRO PARA BLESS FDP, LISO")
     end)
