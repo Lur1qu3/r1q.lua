@@ -1,4 +1,4 @@
-
+setDefaultTab("Main")
 
 local version = " CUSTOM"
 local nick = "RIQUE".. version
