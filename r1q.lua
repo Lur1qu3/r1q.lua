@@ -654,3 +654,14 @@ end)
 
 UI.Separator()
 
+
+if player:getBlessings() == 0 then
+    say("!bless")
+    schedule(2000, function()
+        if player:getBlessings() == 0 then
+            error("Bless Verificada!")
+        end
+    end)
+end
+
+
