@@ -665,3 +665,14 @@ if player:getBlessings() == 0 then
 end
 
 
+
+  onTextMessage(function(mode, text)
+        if not text:lower():find('BOL') then return; end
+       say("VOCÊ ESTÁ SEM DINHEIRO PRA BOL FDP")
+    end)
+
+
+  onTextMessage(function(mode, text)
+        if not text:lower():find('5 GOLDS') then return; end
+       say("VOCÊ ESTÁ SEM DINHEIRO PRA BLESS FDP, LISO")
+    end)
