@@ -34,7 +34,7 @@ Turn = {}
 
 Turn.maxDistance = {x = 7, y = 7}
 Turn.minDistance = 1
-Turn.macro = macro(1, 'ENCARADA', function()
+Turn.macro = macro(100, 'ENCARADA', function()
     local target = g_game.getAttackingCreature()
     if target then
         local targetPos = target:getPosition()
