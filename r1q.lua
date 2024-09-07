@@ -242,7 +242,7 @@ panel = mainTab;
 local bugMap = {};
 
 
-bugMap.macro = macro(1, "THE FLASH", function()
+bugMap.macro = macro(100, "THE FLASH", function()
 if not read or modules.game_console:isChatEnabled() then return end
     local pos = pos();
     for key, config in pairs(bugMap.directions) do
@@ -1112,7 +1112,7 @@ for i,v in ipairs (getSpectators(posz())) do
     end
 end
 end)
-addIcon("autoptinvite", {item=16119, text="PT Invite",}, function(icon, isOn)
+addIcon("autoptinvite", {item=9380, text="PT Invite",}, function(icon, isOn)
   autoptinvite.setOn(isOn) 
 end)
 
