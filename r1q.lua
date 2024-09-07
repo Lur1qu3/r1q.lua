@@ -567,6 +567,8 @@ read = true
 local riquescripts2 = addLabel("UTILIDADES", "UTILIDADES")
 riquescripts2:setColor("orange")
 
+
+
 timeSpellPanelName = "timespellbot"
 local ui = setupUI([[
 Panel
@@ -1056,6 +1058,7 @@ onTalk(function(name, level, mode, text, channelId, pos)
     TimeSpellConfig.spells[text].totalCd = now + TimeSpellConfig.spells[text].totalTime;
     timeSpellConfigSave();
 end);
+
 
 
 
