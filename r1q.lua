@@ -1164,7 +1164,7 @@ addIcon("autoptjoin", {item=9380, text="PT Accept",}, function(icon, isOn)
   autoptjoin.setOn(isOn) 
 end)
 
-UI.Separator()
+
 
 
 
