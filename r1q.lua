@@ -569,6 +569,149 @@ riquescripts2:setColor("orange")
 
 
 
+
+
+
+
+local table_sem_nome = {
+    {storage.saytarget, storage.reflect},
+};
+
+
+getTargetName = function()
+    if (not g_game.isAttacking()) then return; end
+    local target = g_game.getAttackingCreature();
+    if (not target:isPlayer()) then return; end
+    return target:getName();
+end
+
+onTalk(function(name, level, mode, text, channelId, pos)
+    if name ~= getTargetName() then return; end
+    text = text:lower();
+
+    for _, config in ipairs(table_sem_nome) do
+        local toFilter = config[1]:lower():trim();
+        local toSay = config[2]:lower():trim();
+        if text == toFilter then
+       stopCombo = now + 50;
+            say(toSay)
+            break;
+        end
+    end
+end);
+
+
+
+
+
+
+local configBuff = {
+    spell = storage.buffzmagia;
+    orangeMessage = storage.buffzmsg;
+    cooldown = storage.buffzcd;
+}
+
+buffz = macro(100, "B U F F", function()
+    if isInPz() then
+        return;
+    end
+    if (not configBuff.cooldownBuff or (configBuff.cooldownBuff <= os.time())) then
+        say(configBuff.spell);
+    end
+end);
+local findTextBuff = configBuff.orangeMessage:lower();
+onTalk(function(name, level, mode, text, channelId, pos)
+    if (name ~= player:getName()) then
+        return;
+    end
+    text = text:lower();
+    if (text == findTextBuff) then
+        configBuff.cooldownBuff = os.time() + configBuff.cooldown;
+    end
+end);
+
+addIcon("Buff", {item=12617, text="Buff"},buffz)
+
+
+
+
+
+
+ceta = macro(50, "Dash De Bahiano", "*", function(m)
+    --Made By VivoDibra#1182 
+    local tile = getTileUnderCursor()
+    if not tile then return end
+    if tile:getTopThing() == g_game.getLocalPlayer() then
+        return m.setOff()
+    end
+    g_game.use(tile:getTopUseThing())
+end)
+
+addIcon("SETA", {item=815, text="SETA"},ceta)
+
+
+macro(250, "Follow", "*", function()
+   if g_game.isOnline() and g_game.isAttacking() then
+         g_game.setChaseMode(1)
+           end
+           end)
+
+autoptinvite = macro(100, function()
+for i,v in ipairs (getSpectators(posz())) do
+    if v ~= player and v:isPlayer() and v:getShield() == 0 and v:getEmblem() == 1 then
+        g_game.partyInvite(v:getId())
+    end
+end
+end)
+addIcon("autoptinvite", {item=9380, text="PT Invite",}, function(icon, isOn)
+  autoptinvite.setOn(isOn) 
+end)
+
+
+autoptjoin = macro(100, function()
+for i,v in ipairs (getSpectators(posz())) do
+    if v ~= player and v:isPlayer() and v:getShield() == 1 and v:getEmblem() == 1 then
+        g_game.partyJoin(v:getId())
+    end
+end
+end)
+addIcon("autoptjoin", {item=9380, text="PT Accept",}, function(icon, isOn)
+  autoptjoin.setOn(isOn) 
+end)
+
+
+
+
+
+
+
+
+
+
+
+if player:getBlessings() == 0 then
+    say("!bless")
+    schedule(2000, function()
+        if player:getBlessings() == 0 then
+            error("Bless Verificada!")
+        end
+    end)
+end
+
+
+
+onTextMessage(function(mode, text)
+        if not text:lower():find('2 golds') then return; end
+       say("VOCÊ ESTÁ SEM DINHEIRO PARA BOL FDP")
+    end)
+
+
+onTextMessage(function(mode, text)
+        if not text:lower():find('de 5') then return; end
+       say("VOCê ESTÁ SEM DINHEIRO PARA BLESS FDP, LISO")
+    end)
+
+
 timeSpellPanelName = "timespellbot"
 local ui = setupUI([[
 Panel
@@ -1058,144 +1201,3 @@ onTalk(function(name, level, mode, text, channelId, pos)
     TimeSpellConfig.spells[text].totalCd = now + TimeSpellConfig.spells[text].totalTime;
     timeSpellConfigSave();
 end);
-
-
-
-
-local table_sem_nome = {
-    {storage.saytarget, storage.reflect},
-};
-
-
-getTargetName = function()
-    if (not g_game.isAttacking()) then return; end
-    local target = g_game.getAttackingCreature();
-    if (not target:isPlayer()) then return; end
-    return target:getName();
-end
-
-onTalk(function(name, level, mode, text, channelId, pos)
-    if name ~= getTargetName() then return; end
-    text = text:lower();
-
-    for _, config in ipairs(table_sem_nome) do
-        local toFilter = config[1]:lower():trim();
-        local toSay = config[2]:lower():trim();
-        if text == toFilter then
-       stopCombo = now + 50;
-            say(toSay)
-            break;
-        end
-    end
-end);
-
-
-
-
-
-
-local configBuff = {
-    spell = storage.buffzmagia;
-    orangeMessage = storage.buffzmsg;
-    cooldown = storage.buffzcd;
-}
-
-buffz = macro(100, "B U F F", function()
-    if isInPz() then
-        return;
-    end
-    if (not configBuff.cooldownBuff or (configBuff.cooldownBuff <= os.time())) then
-        say(configBuff.spell);
-    end
-end);
-local findTextBuff = configBuff.orangeMessage:lower();
-onTalk(function(name, level, mode, text, channelId, pos)
-    if (name ~= player:getName()) then
-        return;
-    end
-    text = text:lower();
-    if (text == findTextBuff) then
-        configBuff.cooldownBuff = os.time() + configBuff.cooldown;
-    end
-end);
-
-addIcon("Buff", {item=12617, text="Buff"},buffz)
-
-
-
-
-
-
-ceta = macro(50, "Dash De Bahiano", "*", function(m)
-    --Made By VivoDibra#1182 
-    local tile = getTileUnderCursor()
-    if not tile then return end
-    if tile:getTopThing() == g_game.getLocalPlayer() then
-        return m.setOff()
-    end
-    g_game.use(tile:getTopUseThing())
-end)
-
-addIcon("SETA", {item=815, text="SETA"},ceta)
-
-
-macro(250, "Follow", "*", function()
-   if g_game.isOnline() and g_game.isAttacking() then
-         g_game.setChaseMode(1)
-           end
-           end)
-
-autoptinvite = macro(100, function()
-for i,v in ipairs (getSpectators(posz())) do
-    if v ~= player and v:isPlayer() and v:getShield() == 0 and v:getEmblem() == 1 then
-        g_game.partyInvite(v:getId())
-    end
-end
-end)
-addIcon("autoptinvite", {item=9380, text="PT Invite",}, function(icon, isOn)
-  autoptinvite.setOn(isOn) 
-end)
-
-
-autoptjoin = macro(100, function()
-for i,v in ipairs (getSpectators(posz())) do
-    if v ~= player and v:isPlayer() and v:getShield() == 1 and v:getEmblem() == 1 then
-        g_game.partyJoin(v:getId())
-    end
-end
-end)
-addIcon("autoptjoin", {item=9380, text="PT Accept",}, function(icon, isOn)
-  autoptjoin.setOn(isOn) 
-end)
-
-
-
-
-
-
-
-
-
-
-
-if player:getBlessings() == 0 then
-    say("!bless")
-    schedule(2000, function()
-        if player:getBlessings() == 0 then
-            error("Bless Verificada!")
-        end
-    end)
-end
-
-
-
-onTextMessage(function(mode, text)
-        if not text:lower():find('2 golds') then return; end
-       say("VOCÊ ESTÁ SEM DINHEIRO PARA BOL FDP")
-    end)
-
-
-onTextMessage(function(mode, text)
-        if not text:lower():find('de 5') then return; end
-       say("VOCê ESTÁ SEM DINHEIRO PARA BLESS FDP, LISO")
-    end)
