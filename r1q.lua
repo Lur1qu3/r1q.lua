@@ -463,7 +463,8 @@ getPreciseDistance = function(p1, p2)
     return math.abs(p1.x - p2.x) + math.abs(p1.y - p2.y)
 end
 
-hotkey("numpad5", function()
+hotkey("g", function()
+    if not read or modules.game_console:isChatEnabled() then return end
     local standTime = standingTime()
         if player:isAutoWalking() then
       if standTime > 100 then
@@ -561,7 +562,7 @@ hotkey("numpad5", function()
         end
     end
 )
-
+read = true
 
 local riquescripts2 = addLabel("UTILIDADES", "UTILIDADES")
 riquescripts2:setColor("orange")
