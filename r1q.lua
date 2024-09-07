@@ -1,5 +1,5 @@
 setDefaultTab("Main")
-
+UI.Separator()
 local version = " CUSTOM"
 local nick = "RIQUE".. version
 local Nome = UI.Label(nick)
