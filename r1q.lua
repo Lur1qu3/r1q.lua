@@ -27,6 +27,42 @@ end)
 addIcon("Views%", {item=814, text="Views%"},marcar)
 
 
+local loadPanelName = "Restart"
+local cores = {"pink", "white", "green", "red", "blue"}
+local cores2 = 0
+
+local ui = setupUI([[
+Panel
+  height: 20
+
+  Button
+    id: editLoad
+    color: yellow
+    font: verdana-11px-rounded
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 23
+    text: Restart
+    tooltip: Clique Para Recarregar
+
+]], parent)
+
+ui.editLoad.onClick = function(widget)
+    reload()
+end
+
+macro(250, function()
+    cores2 = cores2 == #cores and 1 or cores2 + 1
+    ui.editLoad:setColor(cores[cores2])
+end)
+
+
+
+
+UI.Separator()
+
+
 local riquescripts = addLabel("[P] [V] [P]", "[P] [V] [P]")
 riquescripts:setColor("orange")
 
@@ -1130,40 +1166,164 @@ end)
 
 UI.Separator()
 
-local loadPanelName = "Restart"
-local cores = {"pink", "white", "green", "red", "blue"}
-local cores2 = 0
 
-local ui = setupUI([[
+
+
+
+local PainelPanelName = "listt"
+  local ui = setupUI([[
 Panel
+
   height: 20
 
   Button
-    id: editLoad
-    color: yellow
+    id: editPainel
     font: verdana-11px-rounded
+    color: green
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    height: 23
-    text: Restart
-    tooltip: Clique Para Recarregar
+    height: 35
+    text: Fugas
+    !tooltip: tr('Fugas')
 
-]], parent)
+  ]], parent)
+  ui:setId(PaineltroPanelName)
 
-ui.editLoad.onClick = function(widget)
-    reload()
+  if not storage[PainelPanelName] then
+    storage[PainelPanelName] = { 
+
+    }
+  end
+
+rootWidget = g_ui.getRootWidget()
+if rootWidget then
+    PainelsWindow = UI.createWidget('PainelWindow', rootWidget)
+    PainelsWindow:hide()
+    TabBar = PainelsWindow.paTabBar
+    TabBar:setContentWidget(PainelsWindow.paImagem)
+   for v = 1, 1 do
+
+
+
+
+
+hpPanel7 = g_ui.createWidget("hpPanel") -- Creates Panel
+hpPanel7:setId("panelButtons") -- sets ID
+
+hpPanel8 = g_ui.createWidget("hpPanel") -- Creates Panel
+hpPanel8:setId("2") -- sets ID
+
+hpPanel9 = g_ui.createWidget("hpPanel") -- Creates Panel
+hpPanel9:setId("panelButtons") -- sets ID
+
+hpPanelx = g_ui.createWidget("hpPanel") -- Creates Panel
+hpPanelx:setId("panelButtons") -- sets ID
+
+hpPanelx1 = g_ui.createWidget("hpPanel") -- Creates Panel
+hpPanelx1:setId("panelButtons") -- sets ID
+
+hpPanelx2 = g_ui.createWidget("hpPanel") -- Creates Panel
+hpPanelx2:setId("panelButtons") -- sets ID
+
+hpPanelx3 = g_ui.createWidget("hpPanel") -- Creates Panel
+hpPanelx3:setId("panelButtons") -- sets ID
+
+TabBar:addTab("Fuga", hpPanel7)
+        color= UI.Label()
+color:setColor("green")
+color= UI.Label("Macros Fugas",hpPanel7)
+color:setColor("green")
+
+local spellName = storage.fuga
+local hpPercent = tonumber(storage.percent)
+macro(100, "1º Fuga", function()
+  if (hppercent() <= hpPercent) then
+    say(spellName)
+   end
+end,hpPanel7)
+
+
+local spellName = storage.fuga2
+local hpPercent = tonumber(storage.percent2)
+macro(100, "2º Fuga", function()
+  if (hppercent() <= hpPercent) then
+    say(spellName)
+   end
+end,hpPanel7)
+
+
+local spellName = storage.fuga3
+local hpPercent = tonumber(storage.percent3)
+macro(100, "3º Fuga", function()
+  if (hppercent() <= hpPercent) then
+    say(spellName)
+   end
+end,hpPanel7)
+
+
+
+
+TabBar:addTab("Fugas1º", hpPanel8)
+        color= UI.Label()
+color:setColor("green")
+        color= UI.Label("Storages Fugas 1º:",hpPanel8)
+color:setColor("green")
+        UI.Separator(hpPanel8)
+ 
+
+
+UI.Label("Spell Fuga 1º",hpPanel8)
+addTextEdit("fuga", storage.fuga or "fuga", function(widget, text) storage.fuga = text
+end,hpPanel8)
+UI.Label("Percent Use",hpPanel8)
+addTextEdit("fuga", storage.percent or "50", function(widget, text) storage.percent = text
+end,hpPanel8)
+end
 end
 
-macro(250, function()
-    cores2 = cores2 == #cores and 1 or cores2 + 1
-    ui.editLoad:setColor(cores[cores2])
-end)
+TabBar:addTab("Fugas2º", hpPanel9)
+        color= UI.Label()
+color:setColor("green")
+        color= UI.Label("Storages Fugas 2º:",hpPanel9)
+color:setColor("green")
+        UI.Separator(hpPanel9)
+
+UI.Label("Spell Fuga 2º",hpPanel9)
+addTextEdit("fuga", storage.fuga2 or "fuga", function(widget, text) storage.fuga2 = text
+end,hpPanel9)
+UI.Label("Percent Use",hpPanel9)
+addTextEdit("fuga", storage.percent2 or "50", function(widget, text) storage.percent2 = text
+end,hpPanel9)
+
+
+TabBar:addTab("Fugas2º", hpPanelx)
+        color= UI.Label()
+color:setColor("green")
+        color= UI.Label("Storages Fugas 3º:",hpPanelx)
+color:setColor("green")
+        UI.Separator(hpPanelx)
+
+UI.Label("Spell Fuga 3º",hpPanelx)
+addTextEdit("fuga", storage.fuga3 or "fuga", function(widget, text) storage.fuga3 = text
+end,hpPanelx)
+UI.Label("Percent Use",hpPanelx)
+addTextEdit("fuga", storage.percent3 or "50", function(widget, text) storage.percent3 = text
+end,hpPanelx)
 
 
 
+  PainelsWindow.closeButton.onClick = function(widget)
+    PainelsWindow:hide()
+  end
 
-UI.Separator()
+ui.editPainel.onClick = function(widget)
+    PainelsWindow:show()
+    PainelsWindow:raise()
+    PainelsWindow:focus()
+  end
+
+
 
 
 if player:getBlessings() == 0 then
