@@ -950,7 +950,7 @@ TimeSpellConfig = {
 
 local spellsWidgets = {};
 
-local timeSpellFile = "/bot/" .. configName .. "/".. name() .. "TempoDeMagias.json";
+local timeSpellFile = "/bot/" .. configName .. "/".. name() .. "_TimeSpell.json";
 local MainPanel = windowUI.MainPanel;
 
 local editActiveTime = nil;
