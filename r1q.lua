@@ -129,7 +129,7 @@ local spell = storage.stackar;
 local maxDistance = 7;
  
  
-Stack.icon = addIcon("Stack",  {item=802, text="Stack"}, macro(1, "Stack", function() 
+Stack.icon = addIcon("Stack",  {item=802, text="Stack"}, macro(100, "Stack", function() 
     local furthestMonster = nil;
     local pattern = nil;
     if (modules.corelib.g_keyboard.areKeysPressed("b+W")) then
@@ -176,7 +176,7 @@ end));
 
 
 
-percent = macro(200, "Combo%", "numpad0", function()
+percent = macro(200, "COMBO", function()
  if not g_game.isAttacking() then return end
  if g_game.getAttackingCreature():getHealthPercent() <= 30 then
 say(storage.Magia1, 1600)
@@ -194,7 +194,7 @@ end
  end
 end)
 
-area = macro(50, "NOCAUTE", "numpad0", function()
+area = macro(100, "NOCAUTE", function()
 if not g_game.isAttacking() then return end
  if g_game.getAttackingCreature():getHealthPercent() <= 20 then
 stopCombo = now + 500;
@@ -203,7 +203,7 @@ say(storage.Area1, 1600)
 end)
 
 
-addIcon("Area", {item=674, text="Area"},area)
+addIcon("Nocaute", {item=674, text="Nocaute"},area)
 
 
 
@@ -1105,26 +1105,26 @@ macro(250, "Follow", "*", function()
            end
            end)
 
-autoptinvite = macro(100, "PT Recrutar", function()
+autoptinvite = macro(100, function()
 for i,v in ipairs (getSpectators(posz())) do
     if v ~= player and v:isPlayer() and v:getShield() == 0 and v:getEmblem() == 1 then
         g_game.partyInvite(v:getId())
     end
 end
 end)
-addIcon("autoptinvite", {item=16119, text="PT Recr",}, function(icon, isOn)
+addIcon("autoptinvite", {item=16119, text="PT Invite",}, function(icon, isOn)
   autoptinvite.setOn(isOn) 
 end)
 
---auto accept pt from guild
-autoptjoin = macro(100, "PT Accept", function()
+
+autoptjoin = macro(100, function()
 for i,v in ipairs (getSpectators(posz())) do
     if v ~= player and v:isPlayer() and v:getShield() == 1 and v:getEmblem() == 1 then
         g_game.partyJoin(v:getId())
     end
 end
 end)
-addIcon("autoptjoin", {item=16119, text="PT Join",}, function(icon, isOn)
+addIcon("autoptjoin", {item=9380, text="PT Accept",}, function(icon, isOn)
   autoptjoin.setOn(isOn) 
 end)
 
