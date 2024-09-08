@@ -680,7 +680,7 @@ Panel
     width: 176
     height: 17
     !text: tr('Push Automatic')
-    !tooltip: tr('Empurre Automateico La ele')
+    !tooltip: tr('Empurre Automatico La ele')
     font: verdana-11px-rounded
     color: green
 ]])
