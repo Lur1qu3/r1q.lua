@@ -1,3 +1,77 @@
+--[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 setDefaultTab("Main")
 UI.Separator()
 local version = " CUSTOM"
@@ -835,7 +909,7 @@ addIcon("Buff", {item=12617, text="Buff"},buffz)
 
 
 
-ceta = macro(50, "Dash De Bahiano", "*", function(m)
+ceta = macro(50, "Dash De Bahiano", function(m)
     local tile = getTileUnderCursor()
     if not tile then return end
     if tile:getTopThing() == g_game.getLocalPlayer() then
@@ -847,7 +921,7 @@ end)
 addIcon("SETA", {item=815, text="SETA"},ceta)
 
 
-macro(250, "Follow", "*", function()
+macro(250, "Follow", function()
    if g_game.isOnline() and g_game.isAttacking() then
          g_game.setChaseMode(1)
            end
