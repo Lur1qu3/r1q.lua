@@ -856,11 +856,11 @@ macro(250, "Follow", "*", function()
 
 followTarget = {}
 
--- Cache para tiles já verificados
-local tileCache = {}
-local cacheTimeout = 3000 -- Cache expira em 3 segundos
 
--- Função para verificar se o cache está válido
+local tileCache = {}
+local cacheTimeout = 3000 
+
+
 local function isCacheValid(tilePos)
     local cache = tileCache[followTarget.postostring(tilePos)]
     return cache and (now - cache.time < cacheTimeout) and cache.result
@@ -887,7 +887,7 @@ actualPosition = function()
     return followTarget.targetPos[pos().z]
 end
 
--- Converte os ids de storage.stairsIds e storage.excludeIds para string
+
 stairsIds = {}
 if storage.stairsIds then
     for index, id in ipairs(storage.stairsIds) do
@@ -902,13 +902,13 @@ if storage.excludeIds then
     end
 end
 
--- Função otimizada que verifica escadas com base no storage.stairsIds com cache
+
 followTarget.checkTile = function(tile)
     if not tile then return false end
 
     local tilePos = tile:getPosition()
 
-    -- Verifica o cache
+    
     if isCacheValid(tilePos) then
         return tileCache[followTarget.postostring(tilePos)].result
     end
@@ -931,7 +931,7 @@ followTarget.checkTile = function(tile)
         result = (cor >= 210 and cor <= 213 and not tile:isPathable() and tile:isWalkable())
     end
 
-    -- Armazenando resultado no cache
+    
     tileCache[followTarget.postostring(tilePos)] = {time = now, result = result}
     
     return result
@@ -993,7 +993,7 @@ followTarget.goUse = function(pos, distance)
     end
 end
 
--- Função otimizada para verificar tiles ao redor com base em cache
+
 followTarget.checkAll = function(n)
     if n > 9 then
         return
@@ -1018,8 +1018,8 @@ end
 
 macroCheck =
     macro(
-    1,
-    "Caça",
+    200,
+    "Full Attack Follow",
     function()
         local checkPos = actualPosition()
         if followTarget.tryWalk or not checkPos or not checkPlayer then
@@ -1063,7 +1063,7 @@ macroCheck =
 )
 
 macro(
-    1,
+    100,
     function()
         if macroCheck.isOff() then
             return
@@ -1114,7 +1114,7 @@ onCreaturePositionChange(
 
 stairMacro =
     macro(
-    1,
+    200,
     "Escadinhas",
     function()
         if Stairs.walk.isOn() then
@@ -1155,7 +1155,7 @@ if type(storage.stairsIds) ~= "table" then
 end
 
 if type(storage.excludeIds) ~= "table" then
-  storage.excludeIds = {} -- Inicializando a lista de IDs excluídos
+  storage.excludeIds = {} 
 end
 
 
