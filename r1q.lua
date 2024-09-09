@@ -854,6 +854,251 @@ macro(250, "Follow", "*", function()
            end)
 
 
+followTarget = {}
+
+followTarget.postostring = function(pos)
+    return (pos.x .. "," .. pos.y .. "," .. pos.z)
+end
+
+function followTarget.accurateDistance(a, b)
+    if type(a) == "userdata" then
+        a = a:getPosition()
+    end
+    if not b then
+        b = pos()
+    end
+    if a then
+        return math.abs(b.x - a.x) + math.abs(a.y - b.y)
+    end
+end
+
+followTarget.targetPos = {}
+actualPosition = function()
+    return followTarget.targetPos[pos().z]
+end
+
+-- Converte os ids de storage.stairsIds e storage.excludeIds para string
+stairsIds = {}
+if storage.stairsIds then
+    for index, id in ipairs(storage.stairsIds) do
+        stairsIds[tostring(id)] = true
+    end
+end
+
+excludeIds = {}
+if storage.excludeIds then
+    for index, id in ipairs(storage.excludeIds) do
+        excludeIds[tostring(id)] = true
+    end
+end
+
+-- Função que verifica as escadas com base no storage.stairsIds
+followTarget.checkTile = function(tile)
+    if not tile then
+        return false
+    end
+
+    local topThing = tile:getTopUseThing()
+    if not topThing then
+        return false
+    end
+    local topId = topThing:getId()
+
+    for _, x in ipairs(tile:getItems()) do
+        if excludeIds[tostring(x:getId())] then
+            return false
+        end
+    end
+
+    if stairsIds[tostring(topId)] then
+        return true
+    end
+
+    local cor = g_map.getMinimapColor(tile:getPosition())
+    if cor >= 210 and cor <= 213 and not tile:isPathable() and tile:isWalkable() then
+        return true
+    else
+        return false
+    end
+end
+
+followTarget.isRightDistance = function(p1, p2)
+    local pPos = player:getPosition()
+    if p1.x > pPos.x and p2.x > pPos.x then
+        if p1.y > pPos.y and p2.y > pPos.y then
+            return true
+        elseif p1.y < pPos.y and p2.y < pPos.y then
+            return true
+        elseif p1.y == pPos.y and p2.y == pPos.y then
+            return true
+        end
+    elseif p1.x < pPos.x and p2.x < pPos.x then
+        if p1.y > pPos.y and p2.y > pPos.y then
+            return true
+        elseif p1.y < pPos.y and p2.y < pPos.y then
+            return true
+        elseif p1.y == pPos.y and p2.y == pPos.y then
+            return true
+        end
+    elseif p1.x == pPos.x and p2.x == pPos.x then
+        if p1.y > pPos.y and p2.y > pPos.y then
+            return true
+        elseif p1.y < pPos.y and p2.y < pPos.y then
+            return true
+        end
+    end
+    return false
+end
+
+followTarget.goUse = function(pos, distance)
+    local pPos = player:getPosition()
+    local tile
+    if distance <= 3 then
+        tile = g_map.getTile(pos)
+        return tile and g_game.use(tile:getTopUseThing())
+    else
+        local path = findEveryPath(pos, 20, {ignoreNonPathable = true})
+        for key, value in pairs(path) do
+            key = key:split(",")
+            local position = {x = tonumber(key[1]), y = tonumber(key[2]), z = tonumber(key[3])}
+            local dist = getDistanceBetween(pPos, position)
+            if dist == 3 and followTarget.isRightDistance(pos, position) then
+                local checkTile = g_map.getTile(position)
+                if checkTile and checkTile:canShoot() then
+                    if not tile or tileDistance > followTarget.accurateDistance(pPos, position) then
+                        tile = g_map.getTile(position)
+                        tileDistance = followTarget.accurateDistance(tile:getPosition(), pPos)
+                    end
+                end
+            end
+        end
+        if tile then
+            return g_game.use(tile:getTopUseThing())
+        end
+    end
+end
+
+followTarget.checkAll = function(n)
+  if n > 9 then
+    return
+  end
+  local pos = actualPosition()
+  local tiles = {}
+  for x = -n, n do
+    for y = -n, n do
+        local tilePos = {x = pos.x + x, y = pos.y + y, z = pos.z}
+        local tile = g_map.getTile(tilePos)
+        if followTarget.checkTile(tile) and (findPath(tilePos, pos) or findPath(pos, tilePos)) then
+            table.insert(tiles, {tile = tile, distance = followTarget.accurateDistance(tilePos, pos)})
+        end
+    end
+  end
+  if #tiles == 0 then
+      return followTarget.checkAll(n + 1)
+  end
+  table.sort(
+      tiles,
+      function(a, b)
+          return a.distance < b.distance
+      end
+  )
+  return tiles[1].tile
+end
+
+macroCheck =
+    macro(
+    1,
+    "Full Follow",
+    function()
+        local checkPos = actualPosition()
+        if followTarget.tryWalk or not checkPos or not checkPlayer then
+            return
+        end
+    if not lookForTarget or now - lookForTarget[2] > 500 then
+      local check = getCreatureById(checkPlayer:getId())
+      lookForTarget = check and {check, now}
+    end
+    if followTarget.lastPosition == followTarget.postostring(checkPos) then
+      if followTarget.See then
+        if not lookForTarget then
+          local pos = pos()
+          followTarget.distance = getDistanceBetween(checkPos, pos)
+          followTarget.See:setText("PEGA O SAFADO!", "green")
+          if followTarget.See:isWalkable() then
+            if not followTarget.See:isPathable() then
+              if autoWalk(followTarget.See:getPosition(), 1) then
+                followTarget.tryWalk = true
+                return
+              end
+            end
+            followTarget.goUse(followTarget.See:getPosition(), followTarget.distance)
+          end
+        else
+          local lookForTargetPos = lookForTarget[1]:getPosition()
+          if lookForTargetPos then
+            followTarget.targetPos[lookForTargetPos.z] = lookForTargetPos
+          end
+          followTarget.See:setText("AQUI", "red")
+        end
+      end
+      return
+    end
+    if followTarget.See then
+        followTarget.See:setText("")
+    end
+    followTarget.See = followTarget.checkAll(0)
+    followTarget.lastPosition = followTarget.postostring(checkPos)
+    end
+)
+
+macro(
+    1,
+    function()
+        if macroCheck.isOff() then
+            return
+        end
+        if modules.corelib.g_keyboard.isKeyPressed("escape") then
+            target = nil
+            checkPlayer = nil
+            return g_game.cancelAttack()
+        end
+        local target = actualTarget()
+        if target and target:isPlayer() then
+            local targetPos = target:getPosition()
+            if targetPos then
+                checkPlayer = target
+                followTarget.targetPos[targetPos.z] = targetPos
+            end
+        end
+        local targetPos = checkPlayer and checkPlayer:getPosition()
+        if targetPos and targetPos.z == pos().z and not g_game.isAttacking() then
+            modules.game_interface.processMouseAction(nil, 2, pos(), nil, checkPlayer, checkPlayer)
+            delay(1000)
+            return
+        end
+    end
+)
+
+onCreaturePositionChange(
+    function(creature, newPos, oldPos)
+        if not newPos or not oldPos then
+            return
+        end
+        if creature == player then
+            if followTarget.targetPos[oldPos.z] and followTarget.See and table.equals(newPos, followTarget.See:getPosition()) and followTarget.tryWalk then
+                followTarget.tryWalk = nil
+                followTarget.See = nil
+                followTarget.targetPos[oldPos.z] = nil
+            end
+        elseif creature == checkPlayer then
+            followTarget.targetPos[newPos.z] = newPos
+        end
+    end
+)
+
+
+
+
 
 stairMacro =
     macro(
