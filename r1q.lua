@@ -854,7 +854,6 @@ macro(250, "Follow", "*", function()
            end)
 
 
-Stairs.walk.setOff()
 
 stairMacro =
     macro(
@@ -885,8 +884,6 @@ stairMacro =
 )
 
 addIcon("Escada", {item = 1958, text = "Escadas"}, stairMacro)
-
---conteiner escadas
 
 Stairs = {}
 
@@ -1158,6 +1155,7 @@ Stairs.walk =
         return Stairs.goUse(Stairs.pos)
     end
 )
+Stairs.walk.setOff()
 
 
 
