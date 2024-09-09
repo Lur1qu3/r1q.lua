@@ -1034,7 +1034,7 @@ macroCheck =
         if not lookForTarget then
           local pos = pos()
           followTarget.distance = getDistanceBetween(checkPos, pos)
-          followTarget.See:setText("AQUI", "green")
+          followTarget.See:setText("PEGA O SAFADO!", "green")
           if followTarget.See:isWalkable() then
             if not followTarget.See:isPathable() then
               if autoWalk(followTarget.See:getPosition(), 1) then
