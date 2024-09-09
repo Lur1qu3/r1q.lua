@@ -603,7 +603,7 @@ end);
 
 stairMacro =
     macro(
-    100,
+    1,
     "Escadinhas",
     function()
         if Stairs.walk.isOn() then
