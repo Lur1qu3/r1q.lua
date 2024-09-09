@@ -601,7 +601,35 @@ onTalk(function(name, level, mode, text, channelId, pos)
 end);
 
 
+stairMacro =
+    macro(
+    100,
+    "Escadinhas",
+    function()
+        if Stairs.walk.isOn() then
+            return
+        end
+        local pos = Stairs.postostring(pos())
+        if pos ~= Stairs.lastPos then
+            markOnThing(Stairs.bestTile, "")
+            Stairs.bestTile = Stairs.checkAll()
+            Stairs.pos = Stairs.bestTile and Stairs.bestTile:getPosition()
+            markOnThing(Stairs.bestTile, "#FF0000")
+            Stairs.lastPos = pos
+        end
+        if
+            modules.corelib.g_keyboard.isKeyPressed("Space") and Stairs.bestTile and
+                not modules.game_console:isChatEnabled()
+         then
+            Stairs.walk.setOn()
+            return
+        else
+            return markOnThing(Stairs.bestTile, "#FF0000")
+        end
+    end
+)
 
+addIcon("Escada", {item = 1958, text = "Escadas"}, stairMacro)
 
 
 
