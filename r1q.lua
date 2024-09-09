@@ -856,6 +856,16 @@ macro(250, "Follow", "*", function()
 
 followTarget = {}
 
+-- Cache para tiles já verificados
+local tileCache = {}
+local cacheTimeout = 3000 -- Cache expira em 3 segundos
+
+-- Função para verificar se o cache está válido
+local function isCacheValid(tilePos)
+    local cache = tileCache[followTarget.postostring(tilePos)]
+    return cache and (now - cache.time < cacheTimeout) and cache.result
+end
+
 followTarget.postostring = function(pos)
     return (pos.x .. "," .. pos.y .. "," .. pos.z)
 end
@@ -892,16 +902,19 @@ if storage.excludeIds then
     end
 end
 
--- Função que verifica as escadas com base no storage.stairsIds
+-- Função otimizada que verifica escadas com base no storage.stairsIds com cache
 followTarget.checkTile = function(tile)
-    if not tile then
-        return false
+    if not tile then return false end
+
+    local tilePos = tile:getPosition()
+
+    -- Verifica o cache
+    if isCacheValid(tilePos) then
+        return tileCache[followTarget.postostring(tilePos)].result
     end
 
     local topThing = tile:getTopUseThing()
-    if not topThing then
-        return false
-    end
+    if not topThing then return false end
     local topId = topThing:getId()
 
     for _, x in ipairs(tile:getItems()) do
@@ -910,16 +923,18 @@ followTarget.checkTile = function(tile)
         end
     end
 
+    local result
     if stairsIds[tostring(topId)] then
-        return true
+        result = true
+    else
+        local cor = g_map.getMinimapColor(tilePos)
+        result = (cor >= 210 and cor <= 213 and not tile:isPathable() and tile:isWalkable())
     end
 
-    local cor = g_map.getMinimapColor(tile:getPosition())
-    if cor >= 210 and cor <= 213 and not tile:isPathable() and tile:isWalkable() then
-        return true
-    else
-        return false
-    end
+    -- Armazenando resultado no cache
+    tileCache[followTarget.postostring(tilePos)] = {time = now, result = result}
+    
+    return result
 end
 
 followTarget.isRightDistance = function(p1, p2)
@@ -978,37 +993,33 @@ followTarget.goUse = function(pos, distance)
     end
 end
 
+-- Função otimizada para verificar tiles ao redor com base em cache
 followTarget.checkAll = function(n)
-  if n > 9 then
-    return
-  end
-  local pos = actualPosition()
-  local tiles = {}
-  for x = -n, n do
-    for y = -n, n do
-        local tilePos = {x = pos.x + x, y = pos.y + y, z = pos.z}
-        local tile = g_map.getTile(tilePos)
-        if followTarget.checkTile(tile) and (findPath(tilePos, pos) or findPath(pos, tilePos)) then
-            table.insert(tiles, {tile = tile, distance = followTarget.accurateDistance(tilePos, pos)})
+    if n > 9 then
+        return
+    end
+    local pos = actualPosition()
+    local tiles = {}
+    for x = -n, n do
+        for y = -n, n do
+            local tilePos = {x = pos.x + x, y = pos.y + y, z = pos.z}
+            local tile = g_map.getTile(tilePos)
+            if followTarget.checkTile(tile) and (findPath(tilePos, pos) or findPath(pos, tilePos)) then
+                table.insert(tiles, {tile = tile, distance = followTarget.accurateDistance(tilePos, pos)})
+            end
         end
     end
-  end
-  if #tiles == 0 then
-      return followTarget.checkAll(n + 1)
-  end
-  table.sort(
-      tiles,
-      function(a, b)
-          return a.distance < b.distance
-      end
-  )
-  return tiles[1].tile
+    if #tiles == 0 then
+        return followTarget.checkAll(n + 1)
+    end
+    table.sort(tiles, function(a, b) return a.distance < b.distance end)
+    return tiles[1].tile
 end
 
 macroCheck =
     macro(
     1,
-    "Full Follow",
+    "Caça",
     function()
         local checkPos = actualPosition()
         if followTarget.tryWalk or not checkPos or not checkPlayer then
@@ -1023,7 +1034,7 @@ macroCheck =
         if not lookForTarget then
           local pos = pos()
           followTarget.distance = getDistanceBetween(checkPos, pos)
-          followTarget.See:setText("PEGA O SAFADO!", "green")
+          followTarget.See:setText("AQUI", "green")
           if followTarget.See:isWalkable() then
             if not followTarget.See:isPathable() then
               if autoWalk(followTarget.See:getPosition(), 1) then
@@ -1095,6 +1106,7 @@ onCreaturePositionChange(
         end
     end
 )
+
 
 
 
