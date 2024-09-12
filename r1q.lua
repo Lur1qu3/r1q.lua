@@ -1531,10 +1531,9 @@ local enemyMacro = macro(50, 'Enemy', function()
   end
 end)
 
+addIcon("Enemy", {item = 21979, text = "Enemy"}, enemyMacro)
 
-posEnemy = addIcon("Enemy", {item = 21979, text = "Enemy"}, enemyMacro)
-posEnemy:breakAnchors()
-posEnemy:move(200, 450)
+
 
 
 
