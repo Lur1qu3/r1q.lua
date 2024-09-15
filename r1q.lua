@@ -600,6 +600,23 @@ onTalk(function(name, level, mode, text, channelId, pos)
     end
 end);
 
+local NomeDoJogador = storage.nomeDoJogador or "DBO"
+local MensagemPrivada = "Inimigos avistado, "
+local atraso = 5000 
+
+local MensagemAlerta = macro(1000, "VIGIA", function() end)
+onCreatureAppear(function(monstro)
+  if MensagemAlerta.isOff() then return end
+  if monstro:isPlayer() and monstro ~= player then
+    sayPrivate(NomeDoJogador, MensagemPrivada .. "Nome do vagabundo = " .. monstro:getName())
+    playSound("/sounds/alarm.ogg")
+    delay(atraso)
+  end
+end)
+
+
+
+
 local stName = "PushIcons"
 storage[stName] = storage[stName] or {
   sEx = 1100,
