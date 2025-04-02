@@ -1129,85 +1129,37 @@ onCreaturePositionChange(
 
 
 
-stairMacro =
-    macro(
-    200,
-    "Escadinhas",
-    function()
-        if Stairs.walk.isOn() then
-            return
-        end
-        local pos = Stairs.postostring(pos())
-        if pos ~= Stairs.lastPos then
-            markOnThing(Stairs.bestTile, "")
-            Stairs.bestTile = Stairs.checkAll()
-            Stairs.pos = Stairs.bestTile and Stairs.bestTile:getPosition()
-            markOnThing(Stairs.bestTile, "#FF0000")
-            Stairs.lastPos = pos
-        end
-        if
-            modules.corelib.g_keyboard.isKeyPressed("Space") and Stairs.bestTile and
-                not modules.game_console:isChatEnabled()
-         then
-            Stairs.walk.setOn()
-            return
-        else
-            return markOnThing(Stairs.bestTile, "#FF0000")
-        end
-    end
-)
 
-addIcon("Escada", {item = 1958, text = "Escadas"}, stairMacro)
+
+
 
 Stairs = {}
 
 excludeIds = {}
 
-if type(storage.stairsIds) ~= "table" then
-  storage.stairsIds = {
-    1666, 6207, 1948, 435, 11661, 7771, 5542, 8657, 6264, 1646, 1648, 1678, 
-    5291, 1680, 6905, 6262, 1664, 13296, 1067, 13861, 11931, 1949, 6896, 6205, 
-    13926, 1947, 1968, 5111, 5102, 7725, 7727
-  }
+
+function parseIds(idsString)
+    local idsTable = {}
+    for id in idsString:gmatch("([^,]+)") do
+        table.insert(idsTable, tonumber(id))
+    end
+    return idsTable
 end
 
-if type(storage.excludeIds) ~= "table" then
-  storage.excludeIds = {} 
-end
+stairsIds = parseIds(storage.escadinhas)  -- Agora é uma tabela de IDs
+
+isKeyPressed = modules.corelib.g_keyboard.isKeyPressed
 
 
-stairsIds = {}
-for index, id in ipairs(storage.stairsIds) do
+for index, id in ipairs(stairsIds) do
     stairsIds[tostring(id)] = true
+    stairsIds[index] = nil
 end
 
-excludeIds = {}
-for index, id in ipairs(storage.excludeIds) do
+for index, id in ipairs(excludeIds) do
     excludeIds[tostring(id)] = true
+    excludeIds[index] = nil
 end
-
-
-local stairsContainer = UI.Container(function(widget, items)
-  storage.stairsIds = {}
-  for _, item in ipairs(items) do
-    table.insert(storage.stairsIds, item.id)
-    stairsIds[tostring(item.id)] = true
-  end
-end, true)
-stairsContainer:setHeight(35)
-stairsContainer:setItems(storage.stairsIds)
-
-
-local excludeContainer = UI.Container(function(widget, items)
-  storage.excludeIds = {}
-  for _, item in ipairs(items) do
-    table.insert(storage.excludeIds, item.id)
-    excludeIds[tostring(item.id)] = true
-  end
-end, true)
-excludeContainer:setHeight(35)
-excludeContainer:setItems(storage.excludeIds)
-
 
 Stairs.saveStatus = {}
 
@@ -1326,11 +1278,11 @@ Stairs.goUse = function(pos)
     local tile = g_map.getTile(playerPos)
     local topThing = tile and tile:getTopUseThing()
     if topThing then
-        g_game.use(topThing)
-        if table.equals(tile:getPosition(), pos) then
-            return delay(300)
-        end
+    g_game.use(topThing)
+    if table.equals(tile:getPosition(), pos) then
+      return delay(300)
     end
+  end
 end
 
 Stairs.checkAll = function(n)
@@ -1429,7 +1381,37 @@ Stairs.walk =
         return Stairs.goUse(Stairs.pos)
     end
 )
+
 Stairs.walk.setOff()
+
+stairMacro =
+    macro(
+    1,
+    "Escadinhas",
+    function()
+        if Stairs.walk.isOn() then
+            return
+        end
+        local pos = Stairs.postostring(pos())
+        if pos ~= Stairs.lastPos then
+            markOnThing(Stairs.bestTile, "")
+            Stairs.bestTile = Stairs.checkAll()
+            Stairs.pos = Stairs.bestTile and Stairs.bestTile:getPosition()
+            markOnThing(Stairs.bestTile, "#FF0000")
+            Stairs.lastPos = pos
+        end
+        if
+            modules.corelib.g_keyboard.isKeyPressed("Space") and Stairs.bestTile and
+                not modules.game_console:isChatEnabled()
+         then
+            Stairs.walk.setOn()
+            return
+        else
+            return markOnThing(Stairs.bestTile, "#FF0000")
+        end
+    end
+)
+
 
 
 
